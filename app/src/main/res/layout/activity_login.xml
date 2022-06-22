@@ -8,7 +8,7 @@
     tools:context=".LoginActivity">
 
     <EditText
-        android:id="@+id/login_act_login"
+        android:id="@+id/log_email"
         style="@android:style/Widget.AutoCompleteTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +24,7 @@
         app:layout_constraintVertical_bias="0.536" />
 
     <EditText
-        android:id="@+id/login_act_password"
+        android:id="@+id/log_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -38,7 +38,7 @@
         app:layout_constraintVertical_bias="0.647" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/login_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LOG IN"
