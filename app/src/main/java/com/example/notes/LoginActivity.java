@@ -38,13 +38,13 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = email_v.getText().toString();
                 String password = password_v.getText().toString();
-
-                if(email.isEmpty() || password.isEmpty()){
-                    Toast.makeText(LoginActivity.this,"Credentials empty!", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    loginUser(email, password);
-                }
+                loginUser("bartlomiejdabrowski2000@gmail.com", "12345678");
+//                if(email.isEmpty() || password.isEmpty()){
+//                    Toast.makeText(LoginActivity.this,"Credentials empty!", Toast.LENGTH_SHORT).show();
+//                }
+//                else{
+//                    loginUser(email, password);
+//                }
             }
         });
     }

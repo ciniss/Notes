@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password_v;
     private EditText password2_v;
     private Button register_v;
+    private CheckBox tosCheckBox;
 
     private FirebaseAuth auth;
 
@@ -34,23 +36,26 @@ public class RegisterActivity extends AppCompatActivity {
         password_v = findViewById(R.id.reg_password);
         password2_v = findViewById(R.id.reg_password2);
         register_v = findViewById(R.id.register_btn);
+        tosCheckBox = findViewById(R.id.checkTOS);
+
         register_v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = email_v.getText().toString();
                 String password = password_v.getText().toString();
                 String password2 = password2_v.getText().toString();
-                if(email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this,"Credentials cannot be empty!", Toast.LENGTH_SHORT).show();
+                if (email.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "Credentials cannot be empty!", Toast.LENGTH_SHORT).show();
                 }
                 else if(password.length()<6){
                     Toast.makeText(RegisterActivity.this,"Password too short!\n Make sure it's longer than 6", Toast.LENGTH_SHORT).show();
 
                 }
-                else if(!password.equals(password2)){
-                    Toast.makeText(RegisterActivity.this,"Passwords don't match!", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                else if (!password.equals(password2)) {
+                    Toast.makeText(RegisterActivity.this, "Passwords don't match!", Toast.LENGTH_SHORT).show();
+                } else if (!tosCheckBox.isChecked()) {
+                    Toast.makeText(RegisterActivity.this, "You must agree to TOS!", Toast.LENGTH_SHORT).show();
+                } else {
                     registerUser(email, password);
                 }
             }
