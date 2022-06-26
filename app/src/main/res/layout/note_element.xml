@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/purple_500"
     android:orientation="vertical">
 
     <TextView
@@ -9,11 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="title"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="34sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/note_desc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="conTent" />
+        android:layout_margin="20px"
+        android:text="conTent"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 </LinearLayout>
