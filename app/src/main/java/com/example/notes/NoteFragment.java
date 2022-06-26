@@ -18,8 +18,16 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class NoteFragment extends Fragment {
 
@@ -27,6 +35,7 @@ public class NoteFragment extends Fragment {
     private NoteListAdapter noteListAdapter;
     private ListView listView;
     private Button addNoteButton;
+    private FirebaseUser user;
 
     public NoteFragment() {
     }
@@ -35,6 +44,8 @@ public class NoteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
     }
 
     @Override
@@ -53,8 +64,6 @@ public class NoteFragment extends Fragment {
         });
 
         noteArrayList = new ArrayList<>();
-        noteArrayList.add(new Note("Podróż do Paryża", "Paryż był wspaniałym miastem"));
-        noteArrayList.add(new Note("Zakupy", "Kup mleko i bułki"));
         noteListAdapter = new NoteListAdapter(getContext(), noteArrayList);
 
         listView = (ListView) view.findViewById(R.id.noteList);
@@ -92,6 +101,7 @@ public class NoteFragment extends Fragment {
         } else {
             isEdit = true;
             editNote = new Note(note.getShortcut(), note.getDesc());
+            editNote.setId(note.getId());
         }
 
 
@@ -123,9 +133,20 @@ public class NoteFragment extends Fragment {
         note.setDesc(desc);
     }
 
+    private ArrayList<Note> fetchNotes() {
+//        FirebaseDatabase.getInstance().getReference().child("notes")
+//                .child(user.getUid()).get().getResult().;
+        return null;
+    }
+
     private void saveNoteService(Note note, int position) {
         if (position == -1) {
             noteArrayList.add(note);
+            FirebaseDatabase.getInstance().getReference().child("notes")
+                    .child(user.getUid())
+                    .setValue("Hi");
+            FirebaseDatabase.getInstance().getReference().getKey();
+            Toast.makeText(getContext(), "Dodano!", Toast.LENGTH_SHORT).show();
         } else {
             noteArrayList.set(position, note);
         }
