@@ -4,14 +4,18 @@ import java.util.UUID;
 
 public class Note {
     private String shortcut, desc;
-    private UUID id;
+    private String id;
 
     public Note(String shortcut, String desc) {
-        this.id = UUID.randomUUID();
+        this.id = UUID.randomUUID().toString();
         this.shortcut = shortcut;
         this.desc = desc;
     }
-
+    public Note(){
+        shortcut=null;
+        desc=null;
+        id=null;
+    }
     public String getShortcut() {
         return shortcut;
     }
@@ -28,11 +32,11 @@ public class Note {
         this.desc = desc;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

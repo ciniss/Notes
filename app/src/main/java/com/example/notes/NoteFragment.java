@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.fragment.app.Fragment;
 
 import android.text.InputType;
@@ -23,16 +24,21 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+//import com.google.firebase.database.DataSnapshot;
+//import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class NoteFragment extends Fragment {
 
-    private ArrayList<Note> noteArrayList;
-    private NoteListAdapter noteListAdapter;
+    private ArrayList<Note> noteList;
+    private NoteListAdapter noteAdapter;
     private ListView listView;
     private Button addNoteButton;
     private FirebaseUser user;
@@ -63,11 +69,13 @@ public class NoteFragment extends Fragment {
             }
         });
 
-        noteArrayList = new ArrayList<>();
-        noteListAdapter = new NoteListAdapter(getContext(), noteArrayList);
+        noteList = new ArrayList<>();
+        noteAdapter = new NoteListAdapter(getContext(), noteList);
+
+        retrieveNotes();
 
         listView = (ListView) view.findViewById(R.id.noteList);
-        listView.setAdapter(noteListAdapter);
+        listView.setAdapter(noteAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -78,7 +86,7 @@ public class NoteFragment extends Fragment {
     }
 
     private void onNoteEdit(int position) {
-        showNoteDialog(noteArrayList.get(position), position);
+        showNoteDialog(noteList.get(position), position);
     }
 
     @Override
@@ -128,28 +136,46 @@ public class NoteFragment extends Fragment {
         dialog.show();
     }
 
-    private void setNoteData(Note note, String title, String desc) {
-        note.setShortcut(title);
-        note.setDesc(desc);
-    }
+    private void retrieveNotes() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("notes").child(user.getUid());
 
-    private ArrayList<Note> fetchNotes() {
-//        FirebaseDatabase.getInstance().getReference().child("notes")
-//                .child(user.getUid()).get().getResult().;
-        return null;
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                noteList.clear();
+                for( DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Note note = snapshot.getValue(Note.class);
+                    noteList.add(note);
+                }
+                noteAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void saveNoteService(Note note, int position) {
         if (position == -1) {
-            noteArrayList.add(note);
+            noteList.add(note);
             FirebaseDatabase.getInstance().getReference().child("notes")
                     .child(user.getUid())
-                    .setValue("Hi");
+                    .child(note.getId())
+                    .setValue(note);
             FirebaseDatabase.getInstance().getReference().getKey();
             Toast.makeText(getContext(), "Dodano!", Toast.LENGTH_SHORT).show();
         } else {
-            noteArrayList.set(position, note);
+            noteList.set(position, note);
+            FirebaseDatabase.getInstance().getReference().child("notes")
+                    .child(user.getUid())
+                    .child(note.getId())
+                    .setValue(note);
+            FirebaseDatabase.getInstance().getReference().getKey();
+            Toast.makeText(getContext(), "Edytowano", Toast.LENGTH_SHORT).show();
         }
-        noteListAdapter.notifyDataSetChanged();
+        noteAdapter.notifyDataSetChanged();
+        retrieveNotes();
     }
 }
