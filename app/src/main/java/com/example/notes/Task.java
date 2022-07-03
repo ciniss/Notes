@@ -1,5 +1,8 @@
 package com.example.notes;
 
+import android.os.Build;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -12,7 +15,9 @@ public class Task {
 
     public Task(String taskDue, String shortcut, String desc) {
         this.id = UUID.randomUUID().toString();
-        this.taskAdded = LocalDateTime.now().toString();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.taskAdded = LocalDate.now().toString();
+        }
         this.taskDue = taskDue;
         this.shortcut = shortcut;
         this.desc = desc;

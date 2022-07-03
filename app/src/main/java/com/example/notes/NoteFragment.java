@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -117,19 +118,32 @@ public class NoteFragment extends Fragment {
         EditText desc = dialog.findViewById(R.id.note_desc);
         Button addBtn = dialog.findViewById(R.id.confirm_note_btn);
         Button cancelBtn = dialog.findViewById(R.id.cancel_note_btn);
-
+        ImageButton delBtn = dialog.findViewById(R.id.delete_note);
         title.setText(editNote.getShortcut());
         desc.setText(editNote.getDesc());
 
         addBtn.setOnClickListener(v -> {
-            //setNoteData(note,,);
-            editNote.setShortcut(title.getText().toString());
-            editNote.setDesc(desc.getText().toString());
-            saveNoteService(editNote, position);
-            dialog.dismiss();
-
+            if(title.getText().toString().isEmpty() ||
+                    desc.getText().toString().isEmpty()){
+                Toast.makeText(getContext(), "Uzupełnij Dane!", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                editNote.setShortcut(title.getText().toString());
+                editNote.setDesc(desc.getText().toString());
+                saveNoteService(editNote, position);
+                dialog.dismiss();
+            }
         });
         cancelBtn.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        delBtn.setOnClickListener(v -> {
+            if(note != null){
+                FirebaseDatabase.getInstance().getReference().child("notes")
+                        .child(user.getUid())
+                        .child(note.getId())
+                        .removeValue();
+            }
             dialog.dismiss();
         });
 
