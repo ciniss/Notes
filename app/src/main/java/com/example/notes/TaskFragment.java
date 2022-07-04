@@ -1,5 +1,7 @@
 package com.example.notes;
 
+import static java.time.LocalDate.parse;
+
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -133,7 +136,10 @@ public class TaskFragment extends Fragment {
         DatePicker datePicker = dialog.findViewById(R.id.datePicker1);;
         title.setText(editTask.getShortcut());
         desc.setText(editTask.getDesc());
-
+        if(!editTask.getTaskDue().isEmpty()){
+            LocalDate date = parse(editTask.getTaskDue(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            datePicker.updateDate(date.getYear(), date.getMonthValue(), date.getDayOfMonth());
+        }
         addBtn.setOnClickListener(v -> {
             if(title.getText().toString().isEmpty() ||
                 desc.getText().toString().isEmpty()){
